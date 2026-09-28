@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Supplier - Smart Vendor Pay</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        .container {
+            width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #1f4e79;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 12px;
+            background: #1f4e79;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #1f4e79;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Add Supplier</h1>
+
+    <form method="POST">
+
+        <label>Supplier Name</label>
+        <input type="text" name="name" required>
+
+        <label>Email</label>
+        <input type="email" name="email">
+
+        <label>Phone</label>
+        <input type="text" name="phone">
+
+        <label>Bank Name</label>
+        <input type="text" name="bank_name">
+
+        <label>Account Number</label>
+        <input type="text" name="account_number">
+
+        <label>Risk Score</label>
+        <input
+            type="number"
+            name="risk_score"
+            min="0"
+            max="100"
+            value="0"
+        >
+
+        <button type="submit">
+            Save Supplier
+        </button>
+
+    </form>
+
+    <a href="/suppliers" class="back">
+        ? Back to Suppliers
+    </a>
+
+</div>
+
+</body>
+
+</html>

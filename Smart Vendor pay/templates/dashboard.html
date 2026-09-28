@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Smart Vendor Pay</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1d2939;
+            .brand img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand small {
+    display: block;
+    font-size: 10px;
+    opacity: 0.7;
+    margin-top: 3px;
+}
+        }
+
+        /* ==============================
+           SIDEBAR
+        ============================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+
+            background: linear-gradient(
+                180deg,
+                #09233d 0%,
+                #0d3558 100%
+            );
+
+            color: white;
+            padding: 25px 16px;
+
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .brand {
+            padding: 0 12px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 20px;
+        }
+
+        .brand h1 {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .brand p {
+            margin-top: 5px;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: #9fb4c9;
+        }
+
+        .menu-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #7893ac;
+            letter-spacing: 1.4px;
+            margin: 18px 12px 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: #d8e5f0;
+            text-decoration: none;
+
+            padding: 11px 12px;
+            margin-bottom: 4px;
+
+            border-radius: 8px;
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.09);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: rgba(255,255,255,0.14);
+            color: white;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* ==============================
+           USER AREA
+        ============================== */
+
+        .sidebar-user {
+            margin-top: 25px;
+            padding: 15px 12px;
+
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .user-role {
+            margin-top: 4px;
+            font-size: 11px;
+            color: #9fb4c9;
+        }
+
+        .logout {
+            display: inline-block;
+            margin-top: 12px;
+
+            color: #ffb4b4;
+            text-decoration: none;
+
+            font-size: 12px;
+        }
+
+        .logout:hover {
+            color: white;
+        }
+
+        /* ==============================
+           MAIN CONTENT
+        ============================== */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        /* ==============================
+           TOP BAR
+        ============================== */
+
+        .topbar {
+            height: 75px;
+            background: white;
+
+            border-bottom: 1px solid #e4e9ef;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 35px;
+        }
+
+        .topbar-left h2 {
+            font-size: 24px;
+            color: #09233d;
+        }
+
+        .topbar-left p {
+            margin-top: 4px;
+            color: #7b8794;
+            font-size: 13px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification {
+            position: relative;
+            text-decoration: none;
+            font-size: 20px;
+            color: #516170;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -3px;
+
+            width: 8px;
+            height: 8px;
+
+            background: #e5484d;
+            border-radius: 50%;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #0d3558;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .profile-info strong {
+            display: block;
+            font-size: 13px;
+            color: #243447;
+        }
+
+        .profile-info span {
+            display: block;
+            margin-top: 2px;
+            font-size: 11px;
+            color: #8492a0;
+        }
+
+        /* ==============================
+           PAGE
+        ============================== */
+
+        .page {
+            padding: 30px 35px 45px;
+        }
+
+        /* ==============================
+           WELCOME BANNER
+        ============================== */
+
+        .welcome {
+            background: linear-gradient(
+                135deg,
+                #09233d,
+                #124c7a
+            );
+
+            color: white;
+
+            border-radius: 14px;
+
+            padding: 25px 28px;
+
+            margin-bottom: 25px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 5px 18px rgba(9,35,61,0.12);
+        }
+
+        .welcome h3 {
+            font-size: 21px;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #c9d9e8;
+            font-size: 13px;
+        }
+
+        .welcome-icon {
+            font-size: 48px;
+            opacity: 0.8;
+        }
+
+        /* ==============================
+           STAT CARDS
+        ============================== */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+
+            border: 1px solid #e5eaf0;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 3px 12px rgba(20,40,60,0.04);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-title {
+            color: #718096;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 9px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 18px;
+
+            background: #edf4fa;
+        }
+
+        .stat-value {
+            margin-top: 15px;
+
+            font-size: 26px;
+            font-weight: 700;
+
+            color: #09233d;
+        }
+
+        .stat-description {
+            margin-top: 6px;
+
+            color: #8a97a5;
+            font-size: 11px;
+        }
+
+        /* ==============================
+           FINANCIAL OVERVIEW
+        ============================== */
+
+        .section-title {
+            margin-bottom: 14px;
+
+            color: #09233d;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .finance-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 28px;
+        }
+
+        .finance-card {
+            background: white;
+
+            border: 1px solid #e5eaf0;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 3px 12px rgba(20,40,60,0.04);
+        }
+
+        .finance-card p {
+            color: #778493;
+            font-size: 12px;
+        }
+
+        .finance-card h3 {
+            margin-top: 10px;
+
+            font-size: 21px;
+            color: #09233d;
+        }
+
+        .finance-line {
+            margin-top: 15px;
+
+            height: 5px;
+
+            background: #edf1f5;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        .finance-fill {
+            height: 100%;
+            width: 70%;
+
+            background: #1b6ca8;
+
+            border-radius: 10px;
+        }
+
+        .pending-fill {
+            width: 45%;
+        }
+
+        .approved-fill {
+            width: 60%;
+        }
+
+        .paid-fill {
+            width: 85%;
+        }
+
+        /* ==============================
+           QUICK ACTIONS
+        ============================== */
+
+        .bottom-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.4fr 1fr;
+
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+
+            border: 1px solid #e5eaf0;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 3px 12px rgba(20,40,60,0.04);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+        .panel-header h3 {
+            font-size: 16px;
+            color: #09233d;
+        }
+
+        .panel-header a {
+            text-decoration: none;
+
+            font-size: 12px;
+            color: #1b6ca8;
+        }
+
+        .actions {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+        }
+
+        .action {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 14px;
+
+            border: 1px solid #e5eaf0;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            color: #243447;
+
+            transition: 0.2s;
+        }
+
+        .action:hover {
+            border-color: #a9c4d9;
+            background: #f7fafc;
+            transform: translateY(-1px);
+        }
+
+        .action-icon {
+            width: 38px;
+            height: 38px;
+
+            background: #edf4fa;
+
+            border-radius: 8px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 17px;
+        }
+
+        .action-text strong {
+            display: block;
+
+            font-size: 13px;
+            color: #233548;
+        }
+
+        .action-text span {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #8995a2;
+            font-size: 10px;
+        }
+
+        /* ==============================
+           SYSTEM STATUS
+        ============================== */
+
+        .status-item {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #edf0f3;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-icon {
+            width: 32px;
+            height: 32px;
+
+            border-radius: 7px;
+
+            background: #eef7f1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 14px;
+        }
+
+        .status-left strong {
+            display: block;
+            font-size: 12px;
+            color: #344054;
+        }
+
+        .status-left span {
+            display: block;
+            margin-top: 2px;
+            color: #98a2b3;
+            font-size: 10px;
+        }
+
+        .status-badge {
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            background: #eaf7ef;
+            color: #217a46;
+        }
+
+        .status-badge.warning {
+            background: #fff7e6;
+            color: #a56600;
+        }
+
+        .status-badge.alert {
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        .footer {
+            text-align: center;
+
+            margin-top: 30px;
+
+            color: #98a2b3;
+
+            font-size: 11px;
+        }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 1200px) {
+
+            .stats-grid,
+            .finance-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                min-height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .page {
+                padding: 20px 18px;
+            }
+
+            .welcome {
+                padding: 20px;
+            }
+
+            .welcome-icon {
+                display: none;
+            }
+
+            .stats-grid,
+            .finance-grid,
+            .actions {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-info {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+    <img src="{{ url_for('static', filename='image/SmartVP.jpeg') }}"
+         alt="Smart Vendor Pay Logo">
+    <div>
+        <strong>Smart Vendor Pay</strong>
+        <small>FINANCIAL MANAGEMENT</small>
+    </div>
+</div>
+
+
+        <div class="menu-title">
+            Main
+        </div>
+
+
+        <a href="/dashboard" class="nav-link active">
+            <span class="nav-icon">📊</span>
+            Dashboard
+        </a>
+
+
+        <a href="/invoices" class="nav-link">
+            <span class="nav-icon">🧾</span>
+            Invoices
+        </a>
+
+
+        <a href="/invoice-verification" class="nav-link">
+            <span class="nav-icon">🔍</span>
+            Invoice Verification
+        </a>
+
+
+        <div class="menu-title">
+            Payments
+        </div>
+
+
+        <a href="/payments" class="nav-link">
+            <span class="nav-icon">💳</span>
+            Payments
+        </a>
+
+
+        <a href="/payment-tracking" class="nav-link">
+            <span class="nav-icon">📈</span>
+            Payment Tracking
+        </a>
+
+
+        <a href="/payment-history" class="nav-link">
+            <span class="nav-icon">🕘</span>
+            Payment History
+        </a>
+
+
+        <a href="/payment-approval" class="nav-link">
+            <span class="nav-icon">✅</span>
+            Payment Approval
+        </a>
+
+
+        <div class="menu-title">
+            Management
+        </div>
+
+
+        <a href="/suppliers" class="nav-link">
+            <span class="nav-icon">🏢</span>
+            Suppliers
+        </a>
+
+
+        <a href="/analytics" class="nav-link">
+            <span class="nav-icon">📊</span>
+            Analytics
+        </a>
+
+
+        <a href="/fraud-alerts" class="nav-link">
+            <span class="nav-icon">🚨</span>
+            Fraud Alerts
+        </a>
+
+
+        <a href="/reports" class="nav-link">
+            <span class="nav-icon">📑</span>
+            Reports
+        </a>
+
+
+        <div class="menu-title">
+            Tools
+        </div>
+
+
+        <a href="/notifications" class="nav-link">
+            <span class="nav-icon">🔔</span>
+            Notifications
+        </a>
+
+
+        <a href="/ai-assistant" class="nav-link">
+            <span class="nav-icon">🤖</span>
+            AI Assistant
+        </a>
+
+
+        <div class="sidebar-user">
+
+            <div class="user-name">
+                {{ username }}
+            </div>
+
+            <div class="user-role">
+                {{ role }}
+            </div>
+
+            <a href="/logout" class="logout">
+                ↪ Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <h2>Dashboard</h2>
+
+                <p>
+                    Overview of your vendor payment operations
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <a
+                    href="/notifications"
+                    class="notification"
+                    title="Notifications"
+                >
+
+                    🔔
+
+                    {% if fraud_alerts and fraud_alerts > 0 %}
+
+                    <span class="notification-dot"></span>
+
+                    {% endif %}
+
+                </a>
+
+
+                <div class="profile">
+
+                    <div class="profile-avatar">
+
+                        {{ username[:1]|upper }}
+
+                    </div>
+
+
+                    <div class="profile-info">
+
+                        <strong>
+                            {{ username }}
+                        </strong>
+
+                        <span>
+                            {{ role }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+
+        <section class="page">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome">
+
+                <div>
+
+                    <h3>
+                        Welcome back, {{ username }} 👋
+                    </h3>
+
+                    <p>
+                        Monitor invoices, payments, suppliers and financial risks from one place.
+                    </p>
+
+                </div>
+
+
+                <div class="welcome-icon">
+                    💼
+                </div>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 KEY STATISTICS
+            ====================================== -->
+
+            <div class="section-title">
+                Key Statistics
+            </div>
+
+
+            <div class="stats-grid">
+
+
+                <!-- TOTAL INVOICES -->
+
+                <div class="stat-card">
+
+                    <div class="stat-header">
+
+                        <div class="stat-title">
+                            Total Invoices
+                        </div>
+
+                        <div class="stat-icon">
+                            🧾
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-value">
+                        {{ total_invoices }}
+                    </div>
+
+
+                    <div class="stat-description">
+                        Invoices currently recorded
+                    </div>
+
+                </div>
+
+
+
+                <!-- PENDING APPROVALS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-header">
+
+                        <div class="stat-title">
+                            Pending Approvals
+                        </div>
+
+                        <div class="stat-icon">
+                            ⏳
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-value">
+                        {{ pending_approvals }}
+                    </div>
+
+
+                    <div class="stat-description">
+                        Invoices awaiting approval
+                    </div>
+
+                </div>
+
+
+
+                <!-- PAYMENTS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-header">
+
+                        <div class="stat-title">
+                            Payments Processed
+                        </div>
+
+                        <div class="stat-icon">
+                            💳
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-value">
+
+                        {% if payments_processed %}
+                            {{ payments_processed }}
+                        {% else %}
+                            0
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="stat-description">
+                        Completed payments
+                    </div>
+
+                </div>
+
+
+
+                <!-- FRAUD -->
+
+                <div class="stat-card">
+
+                    <div class="stat-header">
+
+                        <div class="stat-title">
+                            Fraud Alerts
+                        </div>
+
+                        <div class="stat-icon">
+                            🚨
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-value">
+                        {{ fraud_alerts }}
+                    </div>
+
+
+                    <div class="stat-description">
+
+                        {% if fraud_alerts and fraud_alerts > 0 %}
+                            Open alerts requiring attention
+                        {% else %}
+                            No open fraud alerts
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 FINANCIAL OVERVIEW
+            ====================================== -->
+
+            <div class="section-title">
+                Financial Overview
+            </div>
+
+
+            <div class="finance-grid">
+
+
+                <!-- TOTAL VALUE -->
+
+                <div class="finance-card">
+
+                    <p>
+                        Total Invoice Value
+                    </p>
+
+                    <h3>
+                        R {{ "%.2f"|format(total_invoice_value or 0) }}
+                    </h3>
+
+                    <div class="finance-line">
+
+                        <div
+                            class="finance-fill"
+                            style="width: 100%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PENDING VALUE -->
+
+                <div class="finance-card">
+
+                    <p>
+                        Pending Value
+                    </p>
+
+                    <h3>
+                        R {{ "%.2f"|format(pending_invoice_value or 0) }}
+                    </h3>
+
+                    <div class="finance-line">
+
+                        <div
+                            class="finance-fill pending-fill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- APPROVED VALUE -->
+
+                <div class="finance-card">
+
+                    <p>
+                        Approved Value
+                    </p>
+
+                    <h3>
+                        R {{ "%.2f"|format(approved_invoice_value or 0) }}
+                    </h3>
+
+                    <div class="finance-line">
+
+                        <div
+                            class="finance-fill approved-fill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PAID VALUE -->
+
+                <div class="finance-card">
+
+                    <p>
+                        Paid Value
+                    </p>
+
+                    <h3>
+                        R {{ "%.2f"|format(paid_invoice_value or 0) }}
+                    </h3>
+
+                    <div class="finance-line">
+
+                        <div
+                            class="finance-fill paid-fill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 QUICK ACTIONS + SYSTEM STATUS
+            ====================================== -->
+
+            <div class="bottom-grid">
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Quick Actions
+                        </h3>
+
+                    </div>
+
+
+                    <div class="actions">
+
+
+                        <a
+                            href="/invoices/add"
+                            class="action"
+                        >
+
+                            <div class="action-icon">
+                                🧾
+                            </div>
+
+                            <div class="action-text">
+
+                                <strong>
+                                    Add Invoice
+                                </strong>
+
+                                <span>
+                                    Record a new invoice
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a
+                            href="/payments/add"
+                            class="action"
+                        >
+
+                            <div class="action-icon">
+                                💳
+                            </div>
+
+                            <div class="action-text">
+
+                                <strong>
+                                    Add Payment
+                                </strong>
+
+                                <span>
+                                    Create a payment request
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a
+                            href="/invoice-verification"
+                            class="action"
+                        >
+
+                            <div class="action-icon">
+                                🔍
+                            </div>
+
+                            <div class="action-text">
+
+                                <strong>
+                                    Verify Invoices
+                                </strong>
+
+                                <span>
+                                    Check invoice status
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a
+                            href="/payment-approval"
+                            class="action"
+                        >
+
+                            <div class="action-icon">
+                                ✅
+                            </div>
+
+                            <div class="action-text">
+
+                                <strong>
+                                    Payment Approval
+                                </strong>
+
+                                <span>
+                                    Review pending payments
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a
+                            href="/fraud-alerts"
+                            class="action"
+                        >
+
+                            <div class="action-icon">
+                                🚨
+                            </div>
+
+                            <div class="action-text">
+
+                                <strong>
+                                    Fraud Alerts
+                                </strong>
+
+                                <span>
+                                    Review suspicious activity
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a
+                            href="/reports"
+                            class="action"
+                        >
+
+                            <div class="action-icon">
+                                📑
+                            </div>
+
+                            <div class="action-text">
+
+                                <strong>
+                                    View Reports
+                                </strong>
+
+                                <span>
+                                    Review financial reports
+                                </span>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SYSTEM STATUS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            System Overview
+                        </h3>
+
+                        <a href="/analytics">
+                            View Analytics →
+                        </a>
+
+                    </div>
+
+
+                    <div class="status-item">
+
+                        <div class="status-left">
+
+                            <div class="status-icon">
+                                ✓
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Invoice Management
+                                </strong>
+
+                                <span>
+                                    Invoice records
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <span class="status-badge">
+                            Active
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="status-item">
+
+                        <div class="status-left">
+
+                            <div class="status-icon">
+                                ✓
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Payment Processing
+                                </strong>
+
+                                <span>
+                                    Payment workflow
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <span class="status-badge">
+                            Active
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="status-item">
+
+                        <div class="status-left">
+
+                            <div class="status-icon">
+                                🔍
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Fraud Monitoring
+                                </strong>
+
+                                <span>
+                                    Automated checks
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        {% if fraud_alerts and fraud_alerts > 0 %}
+
+                        <span class="status-badge alert">
+                            Attention
+                        </span>
+
+                        {% else %}
+
+                        <span class="status-badge">
+                            Clear
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <div class="status-item">
+
+                        <div class="status-left">
+
+                            <div class="status-icon">
+                                🤖
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    AI Assistant
+                                </strong>
+
+                                <span>
+                                    Financial insights
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <span class="status-badge">
+                            Active
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- FOOTER -->
+
+            <div class="footer">
+
+                Smart Vendor Pay • Financial Management System
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+</body>
+</html>
+

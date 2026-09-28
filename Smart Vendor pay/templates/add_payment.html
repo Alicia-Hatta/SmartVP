@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Payment - Smart Vendor Pay</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #0b1f3a;
+            color: white;
+
+            padding: 25px 15px;
+
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+
+            font-size: 23px;
+            font-weight: bold;
+
+            margin-bottom: 30px;
+        }
+
+        .menu-title {
+            font-size: 12px;
+            color: #9ca3af;
+
+            margin: 20px 10px 10px;
+
+            text-transform: uppercase;
+        }
+
+        .sidebar a {
+            display: block;
+
+            color: #dbeafe;
+
+            text-decoration: none;
+
+            padding: 12px 15px;
+
+            margin-bottom: 5px;
+
+            border-radius: 8px;
+        }
+
+        .sidebar a:hover {
+            background: #163b68;
+            color: white;
+        }
+
+        .sidebar a.active {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        /* TOPBAR */
+
+        .topbar {
+            height: 75px;
+
+            background: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .topbar h1 {
+            font-size: 24px;
+            color: #0b1f3a;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info strong {
+            display: block;
+            color: #0b1f3a;
+        }
+
+        .user-info span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* CONTENT */
+
+        .content {
+            padding: 30px;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h2 {
+            font-size: 28px;
+            color: #0b1f3a;
+
+            margin-bottom: 6px;
+        }
+
+        .page-heading p {
+            color: #6b7280;
+        }
+
+        /* FORM */
+
+        .form-container {
+            background: white;
+
+            max-width: 750px;
+
+            padding: 30px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+            color: #374151;
+        }
+
+        input,
+        select {
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+
+            border-color: #1d4ed8;
+
+            box-shadow:
+                0 0 0 2px rgba(29, 78, 216, 0.1);
+        }
+
+        .invoice-info {
+            margin-top: 8px;
+
+            padding: 10px;
+
+            background: #f8fafc;
+
+            border-radius: 6px;
+
+            color: #64748b;
+
+            font-size: 13px;
+        }
+
+        .buttons {
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #1d4ed8;
+
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .notice {
+            background: #eff6ff;
+
+            border-left: 4px solid #1d4ed8;
+
+            padding: 14px;
+
+            margin-bottom: 25px;
+
+            color: #1e3a8a;
+
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 750px) {
+
+            .sidebar {
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            Smart Vendor Pay
+        </div>
+
+
+        <div class="menu-title">
+            Main
+        </div>
+
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+
+        <a href="/invoices">
+            Invoices
+        </a>
+
+
+        <a href="/invoice-verification">
+            Invoice Verification
+        </a>
+
+
+        <a href="/payments">
+            Payments
+        </a>
+
+
+        <a href="/payment-tracking">
+            Payment Tracking
+        </a>
+
+
+        <a href="/payment-history">
+            Payment History
+        </a>
+
+
+        <a href="/payment-approval">
+            Payment Approval
+        </a>
+
+
+        <div class="menu-title">
+            Management
+        </div>
+
+
+        <a href="/suppliers">
+            Suppliers
+        </a>
+
+
+        <a href="/analytics">
+            Analytics
+        </a>
+
+
+        <a href="/fraud-alerts">
+            Fraud Alerts
+        </a>
+
+
+        <a href="/reports">
+            Reports
+        </a>
+
+
+        <div class="menu-title">
+            Other
+        </div>
+
+
+        <a href="/notifications">
+            Notifications
+        </a>
+
+
+        <a href="/ai-assistant">
+            AI Assistant
+        </a>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+
+        <div class="topbar">
+
+            <h1>
+                Add Payment
+            </h1>
+
+
+            <div class="user-info">
+
+                <strong>
+                    {{ username }}
+                </strong>
+
+                <span>
+                    {{ role }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="content">
+
+
+            <div class="page-heading">
+
+                <h2>
+                    Add Payment
+                </h2>
+
+                <p>
+                    Create a new payment transaction for an invoice.
+                </p>
+
+            </div>
+
+
+            <div class="form-container">
+
+
+                <div class="notice">
+
+                    New payments are created with
+                    <strong>Pending</strong>
+                    status and must be approved before completion.
+
+                </div>
+
+
+                <form method="POST"
+                      action="/payments/add">
+
+
+                    <!-- INVOICE -->
+
+                    <div class="form-group">
+
+                        <label for="invoice_id">
+                            Select Invoice
+                        </label>
+
+                        <select
+                            name="invoice_id"
+                            id="invoice_id"
+                            required
+                        >
+
+                            <option value="">
+                                -- Select Invoice --
+                            </option>
+
+
+                            {% for invoice in invoices %}
+
+                            <option
+                                value="{{ invoice['id'] }}"
+                            >
+
+                                {{ invoice['invoice_number'] }}
+
+                                -
+                                {{ invoice['supplier_name'] or 'Unknown Supplier' }}
+
+                                -
+                                R{{ "%.2f"|format(invoice['amount'] or 0) }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PAYMENT AMOUNT -->
+
+                    <div class="form-group">
+
+                        <label for="amount">
+                            Payment Amount
+                        </label>
+
+                        <input
+                            type="number"
+                            name="amount"
+                            id="amount"
+                            step="0.01"
+                            min="0.01"
+                            placeholder="Enter payment amount"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PAYMENT DATE -->
+
+                    <div class="form-group">
+
+                        <label for="payment_date">
+                            Payment Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="payment_date"
+                            id="payment_date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="buttons">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Add Payment
+                        </button>
+
+
+                        <a
+                            href="/payment-tracking"
+                            class="btn btn-secondary"
+                        >
+                            Cancel
+                        </a>
+
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

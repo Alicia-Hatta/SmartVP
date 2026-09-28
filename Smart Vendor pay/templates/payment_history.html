@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Payment History - Smart Vendor Pay</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172b4d;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #09233d 0%, #0d3558 100%);
+            color: white;
+            padding: 24px 16px;
+            overflow-y: auto;
+        }
+
+        .brand {
+            padding: 5px 10px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 20px;
+        }
+
+        .brand h2 {
+            font-size: 21px;
+            margin-bottom: 5px;
+        }
+
+        .brand span {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #a9c4dd;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #8eabc4;
+            padding: 0 12px 10px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #d7e5f2;
+            padding: 12px;
+            border-radius: 9px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav a:hover {
+            background: rgba(255,255,255,0.09);
+            color: white;
+        }
+
+        .nav a.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-weight: 600;
+            border-left: 3px solid white;
+        }
+
+        .nav-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* ================= USER ================= */
+
+        .sidebar-user {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 18px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #9eb8cf;
+            margin-top: 3px;
+        }
+
+        .logout {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            padding: 9px;
+            border-radius: 7px;
+            background: rgba(255,255,255,0.08);
+            color: #dbe8f4;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .logout:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            padding: 30px 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            color: #09233d;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .tracking-button {
+            display: inline-block;
+            text-decoration: none;
+            background: #09233d;
+            color: white;
+            padding: 11px 17px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .tracking-button:hover {
+            background: #0d3558;
+        }
+
+        /* ================= SUMMARY ================= */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 21px;
+            border: 1px solid #e4eaf1;
+            box-shadow: 0 3px 12px rgba(9,35,61,0.05);
+        }
+
+        .summary-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-icon {
+            width: 39px;
+            height: 39px;
+            border-radius: 9px;
+            background: #edf4fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .summary-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #09233d;
+        }
+
+        .summary-note {
+            font-size: 11px;
+            color: #8795a7;
+            margin-top: 5px;
+        }
+
+        /* ================= INFORMATION ================= */
+
+        .info-card {
+            background: white;
+            border: 1px solid #dce6ef;
+            border-left: 4px solid #0d5c8a;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+        }
+
+        .info-icon {
+            font-size: 23px;
+        }
+
+        .info-content h3 {
+            font-size: 14px;
+            color: #09233d;
+            margin-bottom: 4px;
+        }
+
+        .info-content p {
+            color: #718096;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e4eaf1;
+            box-shadow: 0 3px 12px rgba(9,35,61,0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e8edf3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            font-size: 18px;
+            color: #09233d;
+        }
+
+        .table-header p {
+            font-size: 12px;
+            color: #7b8796;
+            margin-top: 4px;
+        }
+
+        .record-count {
+            background: #edf4fa;
+            color: #0d3558;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            text-align: left;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 13px 18px;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #edf1f5;
+            font-size: 13px;
+            color: #334155;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #fbfcfe;
+        }
+
+        .payment-id {
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .invoice-number {
+            font-weight: 700;
+            color: #0d3558;
+        }
+
+        .supplier {
+            font-weight: 600;
+        }
+
+        .amount {
+            font-weight: 700;
+            color: #09233d;
+        }
+
+        /* ================= STATUS BADGES ================= */
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-completed {
+            background: #e4f7ec;
+            color: #197044;
+        }
+
+        .badge-pending {
+            background: #fff5d8;
+            color: #996f00;
+        }
+
+        .badge-rejected {
+            background: #fde8e8;
+            color: #b42318;
+        }
+
+        .badge-other {
+            background: #edf1f5;
+            color: #596579;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty-state {
+            padding: 65px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 46px;
+            margin-bottom: 14px;
+        }
+
+        .empty-state h3 {
+            color: #334155;
+            margin-bottom: 7px;
+            font-size: 18px;
+        }
+
+        .empty-state p {
+            color: #718096;
+            font-size: 13px;
+        }
+
+        .empty-action {
+            display: inline-block;
+            margin-top: 17px;
+            padding: 10px 15px;
+            background: #09233d;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .sidebar-user {
+                position: relative;
+                left: auto;
+                right: auto;
+                bottom: auto;
+                margin-top: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 22px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <h2>💳 Smart Vendor Pay</h2>
+
+        <span>
+            FINANCIAL MANAGEMENT
+        </span>
+
+    </div>
+
+
+    <div class="nav-title">
+        Main Menu
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="/dashboard">
+            <span class="nav-icon">🏠</span>
+            Dashboard
+        </a>
+
+        <a href="/invoices">
+            <span class="nav-icon">🧾</span>
+            Invoices
+        </a>
+
+        <a href="/invoice-verification">
+            <span class="nav-icon">🔍</span>
+            Invoice Verification
+        </a>
+
+        <a href="/payments">
+            <span class="nav-icon">💳</span>
+            Payments
+        </a>
+
+        <a href="/payment-tracking">
+            <span class="nav-icon">📊</span>
+            Payment Tracking
+        </a>
+
+        <a href="/payment-history" class="active">
+            <span class="nav-icon">🕘</span>
+            Payment History
+        </a>
+
+        <a href="/payment-approval">
+            <span class="nav-icon">📋</span>
+            Payment Approval
+        </a>
+
+        <a href="/suppliers">
+            <span class="nav-icon">🏢</span>
+            Suppliers
+        </a>
+
+        <a href="/analytics">
+            <span class="nav-icon">📈</span>
+            Analytics
+        </a>
+
+        <a href="/fraud-alerts">
+            <span class="nav-icon">🚨</span>
+            Fraud Alerts
+        </a>
+
+        <a href="/reports">
+            <span class="nav-icon">📑</span>
+            Reports
+        </a>
+
+        <a href="/notifications">
+            <span class="nav-icon">🔔</span>
+            Notifications
+        </a>
+
+        <a href="/ai-assistant">
+            <span class="nav-icon">🤖</span>
+            AI Assistant
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-user">
+
+        <div class="user-name">
+            👤 {{ username }}
+        </div>
+
+        <div class="user-role">
+            {{ role }}
+        </div>
+
+        <a href="/logout" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- ================= MAIN CONTENT ================= -->
+
+<main class="main">
+
+
+    <!-- HEADER -->
+
+    <div class="topbar">
+
+        <div class="page-title">
+
+            <h1>
+                Payment History
+            </h1>
+
+            <p>
+                View and review the complete record of supplier payments.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/payment-tracking"
+            class="tracking-button"
+        >
+            View Payment Tracking
+        </a>
+
+    </div>
+
+
+
+    <!-- ================= SUMMARY CARDS ================= -->
+
+    <section class="summary-grid">
+
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <span class="summary-label">
+                    Total Payments
+                </span>
+
+                <div class="summary-icon">
+                    💳
+                </div>
+
+            </div>
+
+            <div class="summary-value">
+                {{ total_payments }}
+            </div>
+
+            <div class="summary-note">
+                All payment records
+            </div>
+
+        </div>
+
+
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <span class="summary-label">
+                    Completed Payments
+                </span>
+
+                <div class="summary-icon">
+                    ✓
+                </div>
+
+            </div>
+
+            <div class="summary-value">
+                {{ completed_payments }}
+            </div>
+
+            <div class="summary-note">
+                Successfully processed payments
+            </div>
+
+        </div>
+
+
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <span class="summary-label">
+                    Completed Value
+                </span>
+
+                <div class="summary-icon">
+                    💰
+                </div>
+
+            </div>
+
+            <div class="summary-value">
+                R {{ "%.2f"|format(total_completed_value) }}
+            </div>
+
+            <div class="summary-note">
+                Total value of completed payments
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= INFORMATION ================= -->
+
+    <div class="info-card">
+
+        <div class="info-icon">
+            🕘
+        </div>
+
+        <div class="info-content">
+
+            <h3>
+                Payment Record
+            </h3>
+
+            <p>
+                This page provides a historical record of payments
+                created in Smart Vendor Pay. Payment status shows whether
+                each transaction is pending, completed or rejected.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= HISTORY TABLE ================= -->
+
+    <section class="table-card">
+
+
+        <div class="table-header">
+
+            <div>
+
+                <h2>
+                    Payment Records
+                </h2>
+
+                <p>
+                    Complete payment transaction history.
+                </p>
+
+            </div>
+
+
+            <div class="record-count">
+
+                {{ total_payments }} Record(s)
+
+            </div>
+
+        </div>
+
+
+
+        {% if payments %}
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Payment
+                        </th>
+
+                        <th>
+                            Invoice
+                        </th>
+
+                        <th>
+                            Supplier
+                        </th>
+
+                        <th>
+                            Invoice Amount
+                        </th>
+
+                        <th>
+                            Payment Amount
+                        </th>
+
+                        <th>
+                            Payment Date
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for payment in payments %}
+
+
+                    <tr>
+
+
+                        <!-- PAYMENT ID -->
+
+                        <td>
+
+                            <span class="payment-id">
+                                #{{ payment.id }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- INVOICE -->
+
+                        <td>
+
+                            <span class="invoice-number">
+
+                                {{ payment.invoice_number or "Unknown Invoice" }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- SUPPLIER -->
+
+                        <td>
+
+                            <span class="supplier">
+
+                                {{ payment.supplier_name or "Unknown Supplier" }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- INVOICE AMOUNT -->
+
+                        <td>
+
+                            R {{ "%.2f"|format(payment.invoice_amount or 0) }}
+
+                        </td>
+
+
+                        <!-- PAYMENT AMOUNT -->
+
+                        <td>
+
+                            <span class="amount">
+
+                                R {{ "%.2f"|format(payment.amount or 0) }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- DATE -->
+
+                        <td>
+
+                            {{ payment.payment_date or "Not Available" }}
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+
+                            {% if payment.status == "Completed" %}
+
+                                <span class="badge badge-completed">
+                                    ✓ Completed
+                                </span>
+
+
+                            {% elif payment.status == "Pending" %}
+
+                                <span class="badge badge-pending">
+                                    ⏳ Pending
+                                </span>
+
+
+                            {% elif payment.status == "Rejected" %}
+
+                                <span class="badge badge-rejected">
+                                    ✕ Rejected
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="badge badge-other">
+
+                                    {{ payment.status or "Unknown" }}
+
+                                </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                🕘
+            </div>
+
+            <h3>
+                No Payment History
+            </h3>
+
+            <p>
+                There are currently no payment records to display.
+            </p>
+
+            <a
+                href="/payments/add"
+                class="empty-action"
+            >
+                + Add Payment
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+</html>
+

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Vendor Pay - Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background:
+                linear-gradient(135deg, #071a2f 0%, #0d3154 50%, #1464a0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            color: #1f2937;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 1050px;
+            min-height: 620px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.30);
+        }
+
+        /* =========================================
+           BRAND PANEL
+        ========================================= */
+
+        .brand-panel {
+            background:
+                linear-gradient(145deg, #0b2945, #124d7a);
+            color: white;
+            padding: 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-panel::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50%;
+            right: -130px;
+            top: -100px;
+        }
+
+        .brand-panel::after {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50%;
+            left: -230px;
+            bottom: -220px;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            width: 62px;
+            height: 62px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+
+        .brand-panel h1 {
+            font-size: 40px;
+            line-height: 1.1;
+            margin-bottom: 18px;
+            letter-spacing: -1px;
+        }
+
+        .brand-panel .tagline {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #d7e8f7;
+            max-width: 410px;
+            margin-bottom: 35px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 17px;
+            color: #e7f2fb;
+            font-size: 14px;
+        }
+
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.13);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .copyright {
+            position: absolute;
+            bottom: 25px;
+            left: 55px;
+            font-size: 12px;
+            color: #aac7dc;
+        }
+
+        /* =========================================
+           LOGIN PANEL
+        ========================================= */
+
+        .login-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 55px;
+            background: #ffffff;
+        }
+
+        .login-content {
+            width: 100%;
+            max-width: 390px;
+        }
+
+        .login-content h2 {
+            font-size: 30px;
+            color: #102a43;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 21px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8aa0b5;
+            font-size: 15px;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #d7e0e8;
+            border-radius: 10px;
+            padding: 0 45px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+            color: #1f2937;
+            background: #f9fbfd;
+        }
+
+        .form-group input:focus {
+            border-color: #1f6fae;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(31,111,174,0.10);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #7b8da0;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .login-button {
+            width: 100%;
+            height: 52px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #155f91, #1f7ab8);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 5px;
+            box-shadow: 0 7px 18px rgba(21,95,145,0.22);
+        }
+
+        .login-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(21,95,145,0.30);
+        }
+
+        .security-note {
+            margin-top: 25px;
+            padding: 13px 15px;
+            background: #f4f8fb;
+            border-radius: 9px;
+            color: #718096;
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .security-note span {
+            font-size: 14px;
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 800px) {
+
+            .login-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .brand-panel {
+                padding: 40px;
+                min-height: 360px;
+            }
+
+            .brand-panel h1 {
+                font-size: 32px;
+            }
+
+            .brand-panel .tagline {
+                font-size: 15px;
+            }
+
+            .copyright {
+                position: static;
+                margin-top: 30px;
+            }
+
+            .login-panel {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .login-wrapper {
+                border-radius: 18px;
+            }
+
+            .brand-panel {
+                padding: 30px;
+            }
+
+            .login-panel {
+                padding: 30px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <!-- =========================================
+         BRANDING
+    ========================================== -->
+
+    <section class="brand-panel">
+
+        <div class="brand-content">
+
+            <div class="logo">
+                💳
+            </div>
+
+            <h1>
+                Smart Vendor Pay
+            </h1>
+
+            <p class="tagline">
+                A smarter way to manage supplier invoices,
+                payments and financial risk from one secure platform.
+            </p>
+
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Centralised invoice management</span>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Supplier and payment management</span>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">✓</div>
+                <span>Financial visibility and risk monitoring</span>
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            Smart Vendor Pay • Financial Management Platform
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         LOGIN FORM
+    ========================================== -->
+
+    <section class="login-panel">
+
+        <div class="login-content">
+
+            <h2>
+                Welcome back
+            </h2>
+
+            <p class="login-subtitle">
+                Sign in to access your Smart Vendor Pay dashboard.
+            </p>
+
+
+            <form method="POST">
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword()"
+                        >
+                            Show
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Sign In
+                </button>
+
+            </form>
+
+
+            <div class="security-note">
+                <span>🔐</span>
+                Your financial management workspace is protected
+                by secure account authentication.
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+function togglePassword() {
+
+    const password =
+        document.getElementById("password");
+
+    const button =
+        document.querySelector(".password-toggle");
+
+    if (password.type === "password") {
+
+        password.type = "text";
+        button.textContent = "Hide";
+
+    } else {
+
+        password.type = "password";
+        button.textContent = "Show";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

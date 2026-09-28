@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Smart Vendor Pay - Notifications
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f5f7fa;
+            color: #1f2937;
+        }
+
+
+        /* =========================================
+           LAYOUT
+        ========================================== */
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+
+        /* =========================================
+           SIDEBAR
+        ========================================== */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #09233d,
+                    #0d3558
+                );
+
+            color: white;
+
+            padding: 25px 17px;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 5px 12px 30px;
+        }
+
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 11px;
+
+            background:
+                rgba(255,255,255,0.13);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+        }
+
+
+        .brand-text {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+
+        .brand-subtitle {
+            font-size: 10px;
+            color: #9dbbd2;
+            margin-top: 3px;
+        }
+
+
+        .nav-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+
+            color: #89a8c0;
+
+            padding: 0 13px 10px;
+        }
+
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            text-decoration: none;
+            color: #c9d9e6;
+
+            padding: 11px 13px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+            transition: all 0.2s ease;
+        }
+
+
+        .nav a:hover,
+        .nav a.active {
+            background: rgba(255,255,255,0.12);
+            color: white;
+        }
+
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+
+        /* =========================================
+           SIDEBAR USER
+        ========================================== */
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+
+        .sidebar-user {
+            padding: 15px;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            border-radius: 11px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .sidebar-user-label {
+            color: #91b0c7;
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+
+
+        .sidebar-user-name {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+
+        .sidebar-user-role {
+            color: #b9cede;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+
+        .logout-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            text-decoration: none;
+
+            color: #ffb5b5;
+
+            padding: 11px 13px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+        }
+
+
+        .logout-link:hover {
+            background:
+                rgba(220,53,69,0.13);
+        }
+
+
+        /* =========================================
+           MAIN
+        ========================================== */
+
+        .main {
+            margin-left: 250px;
+
+            width:
+                calc(100% - 250px);
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           TOPBAR
+        ========================================== */
+
+        .topbar {
+            height: 76px;
+
+            background: white;
+
+            border-bottom:
+                1px solid #e6ebf0;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 35px;
+        }
+
+
+        .page-title h1 {
+            font-size: 20px;
+            color: #142b3d;
+        }
+
+
+        .page-title p {
+            color: #8291a1;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1d6597,
+                    #3a91c5
+                );
+
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+
+        .profile-name {
+            font-size: 13px;
+            font-weight: bold;
+            color: #263b4a;
+        }
+
+
+        .profile-role {
+            font-size: 10px;
+            color: #8493a1;
+            margin-top: 3px;
+        }
+
+
+        /* =========================================
+           CONTENT
+        ========================================== */
+
+        .content {
+            padding: 30px 35px 40px;
+        }
+
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+
+        .welcome h2 {
+            color: #152c3d;
+            font-size: 24px;
+            margin-bottom: 7px;
+        }
+
+
+        .welcome p {
+            color: #7a8996;
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           NOTIFICATION SUMMARY
+        ========================================== */
+
+        .summary-card {
+            background: white;
+
+            border:
+                1px solid #e7edf2;
+
+            border-radius: 13px;
+
+            padding: 22px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(25,55,80,0.045);
+        }
+
+
+        .summary-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+
+        .summary-icon {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 12px;
+
+            background: #fff5df;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+
+        .summary-card h2 {
+            color: #183348;
+            font-size: 18px;
+        }
+
+
+        .summary-card p {
+            color: #82909c;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+
+        .notification-count {
+            margin-left: auto;
+
+            background: #edf5fa;
+            color: #175b83;
+
+            border-radius: 20px;
+
+            padding: 8px 14px;
+
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+
+        /* =========================================
+           NOTIFICATION LIST
+        ========================================== */
+
+        .notifications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+
+        .notification-card {
+            background: white;
+
+            border:
+                1px solid #e7edf2;
+
+            border-radius: 13px;
+
+            padding: 20px;
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 15px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(25,55,80,0.045);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .notification-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(25,55,80,0.08);
+        }
+
+
+        .notification-icon {
+            width: 43px;
+            height: 43px;
+
+            border-radius: 11px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 19px;
+
+            flex-shrink: 0;
+        }
+
+
+        .notification-icon.fraud {
+            background: #fff0f1;
+        }
+
+
+        .notification-icon.invoice {
+            background: #fff5df;
+        }
+
+
+        .notification-icon.payment {
+            background: #e7f7ef;
+        }
+
+
+        .notification-content {
+            flex: 1;
+        }
+
+
+        .notification-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 6px;
+        }
+
+
+        .notification-title {
+            color: #203b4f;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        .notification-date {
+            color: #9aa6b1;
+
+            font-size: 10px;
+
+            white-space: nowrap;
+        }
+
+
+        .notification-message {
+            color: #657582;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+            margin-bottom: 6px;
+        }
+
+
+        .notification-details {
+            color: #9aa6b1;
+
+            font-size: 10px;
+        }
+
+
+        .notification-status {
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 9px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        .status-critical {
+            background: #fdebec;
+            color: #b4232c;
+        }
+
+
+        .status-high {
+            background: #fff0e2;
+            color: #b45c13;
+        }
+
+
+        .status-medium {
+            background: #fff5df;
+            color: #9a6500;
+        }
+
+
+        .status-pending {
+            background: #fff5df;
+            color: #9a6500;
+        }
+
+
+        .status-completed {
+            background: #e7f7ef;
+            color: #23734b;
+        }
+
+
+        /* =========================================
+           EMPTY STATE
+        ========================================== */
+
+        .empty-state {
+            background: white;
+
+            border:
+                1px solid #e7edf2;
+
+            border-radius: 13px;
+
+            padding: 55px 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 3px 12px
+                rgba(25,55,80,0.045);
+        }
+
+
+        .empty-icon {
+            font-size: 40px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .empty-state h3 {
+            color: #203b4f;
+
+            font-size: 16px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .empty-state p {
+            color: #8a98a4;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================================
+           BUTTON
+        ========================================== */
+
+        .view-button {
+            display: inline-block;
+
+            text-decoration: none;
+
+            margin-top: 10px;
+
+            padding: 7px 11px;
+
+            background: #edf5fa;
+
+            color: #175b83;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            font-weight: bold;
+        }
+
+
+        .view-button:hover {
+            background: #dcecf6;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================== */
+
+        .footer {
+            text-align: center;
+
+            color: #a0abb4;
+
+            font-size: 10px;
+
+            margin-top: 35px;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                width: 70px;
+
+                padding:
+                    20px 10px;
+            }
+
+
+            .brand {
+                justify-content: center;
+
+                padding:
+                    5px 0 25px;
+            }
+
+
+            .brand-text,
+            .brand-subtitle,
+            .nav-title,
+            .nav a span:not(.nav-icon),
+            .sidebar-user,
+            .logout-link span {
+                display: none;
+            }
+
+
+            .nav a {
+                justify-content: center;
+
+                padding: 13px;
+            }
+
+
+            .logout-link {
+                justify-content: center;
+            }
+
+
+            .main {
+                margin-left: 70px;
+
+                width:
+                    calc(100% - 70px);
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .topbar {
+                padding: 0 20px;
+            }
+
+
+            .profile-name,
+            .profile-role {
+                display: none;
+            }
+
+
+            .content {
+                padding:
+                    25px 20px;
+            }
+
+
+            .notification-card {
+                flex-direction: column;
+            }
+
+
+            .notification-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 5px;
+            }
+
+
+            .notification-count {
+                margin-left: 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                💳
+            </div>
+
+            <div>
+
+                <div class="brand-text">
+                    Smart Vendor Pay
+                </div>
+
+                <div class="brand-subtitle">
+                    FINANCIAL MANAGEMENT
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-title">
+            Main Menu
+        </div>
+
+
+        <nav class="nav">
+
+
+            <a href="/dashboard">
+
+                <span class="nav-icon">
+                    ▦
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a href="/invoices">
+
+                <span class="nav-icon">
+                    🧾
+                </span>
+
+                <span>
+                    Invoices
+                </span>
+
+            </a>
+
+
+            <a href="/payments">
+
+                <span class="nav-icon">
+                    💳
+                </span>
+
+                <span>
+                    Payments
+                </span>
+
+            </a>
+
+
+            <a href="/suppliers">
+
+                <span class="nav-icon">
+                    🏢
+                </span>
+
+                <span>
+                    Suppliers
+                </span>
+
+            </a>
+
+
+            <a href="/analytics">
+
+                <span class="nav-icon">
+                    📊
+                </span>
+
+                <span>
+                    Analytics
+                </span>
+
+            </a>
+
+
+            <a href="/fraud-alerts">
+
+                <span class="nav-icon">
+                    ⚠️
+                </span>
+
+                <span>
+                    Fraud Alerts
+                </span>
+
+            </a>
+
+
+            <!-- NOTIFICATIONS -->
+
+            <a
+                href="/notifications"
+                class="active"
+            >
+
+                <span class="nav-icon">
+                    🔔
+                </span>
+
+                <span>
+                    Notifications
+                </span>
+
+            </a>
+
+
+            <a href="/ai-assistant">
+
+                <span class="nav-icon">
+                    🤖
+                </span>
+
+                <span>
+                    AI Assistant
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+
+            <div class="sidebar-user">
+
+                <div class="sidebar-user-label">
+                    SIGNED IN AS
+                </div>
+
+                <div class="sidebar-user-name">
+                    {{ username }}
+                </div>
+
+                <div class="sidebar-user-role">
+                    {{ role }}
+                </div>
+
+            </div>
+
+
+            <a
+                href="/logout"
+                class="logout-link"
+            >
+
+                <span>
+                    ↪
+                </span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN
+    ========================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+
+            <div class="page-title">
+
+                <h1>
+                    Notifications
+                </h1>
+
+                <p>
+                    Important updates from Smart Vendor Pay
+                </p>
+
+            </div>
+
+
+            <div class="profile">
+
+
+                <div class="avatar">
+                    {{ username[0]|upper }}
+                </div>
+
+
+                <div>
+
+                    <div class="profile-name">
+                        {{ username }}
+                    </div>
+
+                    <div class="profile-role">
+                        {{ role }}
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <div class="content">
+
+
+            <!-- WELCOME -->
+
+            <section class="welcome">
+
+                <h2>
+                    Notifications 🔔
+                </h2>
+
+                <p>
+                    Stay updated with invoices, payments
+                    and fraud alerts.
+                </p>
+
+            </section>
+
+
+            <!-- SUMMARY -->
+
+            <div class="summary-card">
+
+
+                <div class="summary-top">
+
+
+                    <div class="summary-icon">
+                        🔔
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Notification Centre
+                        </h2>
+
+                        <p>
+                            Recent activity requiring your attention
+                        </p>
+
+                    </div>
+
+
+                    <div class="notification-count">
+
+                        {{ notifications|length }}
+
+                        Updates
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =====================================
+                 NOTIFICATIONS
+            ====================================== -->
+
+            {% if notifications %}
+
+
+            <div class="notifications-list">
+
+
+                {% for notification in notifications %}
+
+
+                <div class="notification-card">
+
+
+                    <div
+                        class="notification-icon {{ notification.type }}"
+                    >
+                        {{ notification.icon }}
+                    </div>
+
+
+                    <div class="notification-content">
+
+
+                        <div class="notification-header">
+
+
+                            <div class="notification-title">
+
+                                {{ notification.title }}
+
+                            </div>
+
+
+                            {% if notification.date %}
+
+                            <div class="notification-date">
+
+                                {{ notification.date }}
+
+                            </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                        <div class="notification-message">
+
+                            {{ notification.message }}
+
+                        </div>
+
+
+                        <div class="notification-details">
+
+                            {{ notification.details }}
+
+                        </div>
+
+
+                        <a
+                            href="{{ notification.link }}"
+                            class="view-button"
+                        >
+                            View Details →
+                        </a>
+
+
+                    </div>
+
+
+                    <div
+                        class="
+                            notification-status
+
+                            {% if notification.severity == 'Critical' %}
+                                status-critical
+
+                            {% elif notification.severity == 'High' %}
+                                status-high
+
+                            {% elif notification.severity == 'Medium' %}
+                                status-medium
+
+                            {% elif notification.severity == 'Pending' %}
+                                status-pending
+
+                            {% elif notification.severity == 'Completed' %}
+                                status-completed
+                            {% endif %}
+                        "
+                    >
+
+                        {{ notification.severity }}
+
+                    </div>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+            {% else %}
+
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+
+                <div class="empty-icon">
+                    🔔
+                </div>
+
+
+                <h3>
+                    No notifications
+                </h3>
+
+
+                <p>
+                    You're all caught up. There are no
+                    new notifications at the moment.
+                </p>
+
+
+            </div>
+
+
+            {% endif %}
+
+
+            <div class="footer">
+
+                Smart Vendor Pay • Notification Centre
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>

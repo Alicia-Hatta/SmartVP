@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports - Smart Vendor Pay</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172b4d;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #09233d 0%, #0d3558 100%);
+            color: white;
+            padding: 24px 16px;
+            overflow-y: auto;
+        }
+
+        .brand {
+            padding: 5px 10px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 20px;
+        }
+
+        .brand h2 {
+            font-size: 21px;
+            margin-bottom: 5px;
+        }
+
+        .brand span {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #a9c4dd;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #8eabc4;
+            padding: 0 12px 10px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #d7e5f2;
+            padding: 12px;
+            border-radius: 9px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav a:hover {
+            background: rgba(255,255,255,0.09);
+            color: white;
+        }
+
+        .nav a.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-weight: 600;
+            border-left: 3px solid white;
+        }
+
+        .nav-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* ================= USER ================= */
+
+        .sidebar-user {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 18px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #9eb8cf;
+            margin-top: 3px;
+        }
+
+        .logout {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            padding: 9px;
+            border-radius: 7px;
+            background: rgba(255,255,255,0.08);
+            color: #dbe8f4;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .logout:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            padding: 30px 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            color: #09233d;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .print-button {
+            border: none;
+            background: #09233d;
+            color: white;
+            padding: 11px 17px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .print-button:hover {
+            background: #0d3558;
+        }
+
+        /* ================= SUMMARY ================= */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 21px;
+            border: 1px solid #e4eaf1;
+            box-shadow: 0 3px 12px rgba(9,35,61,0.05);
+        }
+
+        .summary-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-icon {
+            width: 39px;
+            height: 39px;
+            border-radius: 9px;
+            background: #edf4fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #09233d;
+        }
+
+        .summary-note {
+            font-size: 11px;
+            color: #8795a7;
+            margin-top: 5px;
+        }
+
+        /* ================= REPORT CARDS ================= */
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .report-card {
+            background: white;
+            border: 1px solid #e4eaf1;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(9,35,61,0.05);
+            overflow: hidden;
+        }
+
+        .report-header {
+            padding: 19px 21px;
+            border-bottom: 1px solid #e8edf3;
+        }
+
+        .report-header h2 {
+            font-size: 17px;
+            color: #09233d;
+        }
+
+        .report-header p {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #7b8796;
+        }
+
+        .report-body {
+            padding: 20px 21px;
+        }
+
+        /* ================= FINANCIAL ROWS ================= */
+
+        .financial-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 0;
+            border-bottom: 1px solid #edf1f5;
+        }
+
+        .financial-row:last-child {
+            border-bottom: none;
+        }
+
+        .financial-label {
+            font-size: 13px;
+            color: #5f6f82;
+        }
+
+        .financial-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #09233d;
+        }
+
+        .financial-value.positive {
+            color: #197044;
+        }
+
+        .financial-value.warning {
+            color: #996f00;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status-row {
+            margin-bottom: 17px;
+        }
+
+        .status-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-size: 12px;
+        }
+
+        .status-name {
+            color: #5f6f82;
+        }
+
+        .status-count {
+            font-weight: 700;
+            color: #09233d;
+        }
+
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: #edf1f5;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #0d5c8a;
+            border-radius: 20px;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-card {
+            background: white;
+            border: 1px solid #e4eaf1;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(9,35,61,0.05);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .table-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e8edf3;
+        }
+
+        .table-header h2 {
+            font-size: 18px;
+            color: #09233d;
+        }
+
+        .table-header p {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #7b8796;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th {
+            text-align: left;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 13px 18px;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #edf1f5;
+            font-size: 13px;
+            color: #334155;
+        }
+
+        tr:hover td {
+            background: #fbfcfe;
+        }
+
+        .amount {
+            font-weight: 700;
+            color: #09233d;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .report-footer {
+            text-align: center;
+            padding: 15px;
+            color: #8a96a6;
+            font-size: 11px;
+        }
+
+        /* ================= PRINT ================= */
+
+        @media print {
+
+            .sidebar,
+            .print-button {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            body {
+                background: white;
+            }
+
+            .summary-card,
+            .report-card,
+            .table-card {
+                box-shadow: none;
+            }
+
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1100px) {
+
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 850px) {
+
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .sidebar-user {
+                position: relative;
+                left: auto;
+                right: auto;
+                bottom: auto;
+                margin-top: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 22px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <h2>💳 Smart Vendor Pay</h2>
+
+        <span>
+            FINANCIAL MANAGEMENT
+        </span>
+
+    </div>
+
+
+    <div class="nav-title">
+        Main Menu
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="/dashboard">
+            <span class="nav-icon">🏠</span>
+            Dashboard
+        </a>
+
+        <a href="/invoices">
+            <span class="nav-icon">🧾</span>
+            Invoices
+        </a>
+
+        <a href="/invoice-verification">
+            <span class="nav-icon">🔍</span>
+            Invoice Verification
+        </a>
+
+        <a href="/payments">
+            <span class="nav-icon">💳</span>
+            Payments
+        </a>
+
+        <a href="/payment-tracking">
+            <span class="nav-icon">📊</span>
+            Payment Tracking
+        </a>
+
+        <a href="/payment-history">
+            <span class="nav-icon">🕘</span>
+            Payment History
+        </a>
+
+        <a href="/payment-approval">
+            <span class="nav-icon">📋</span>
+            Payment Approval
+        </a>
+
+        <a href="/suppliers">
+            <span class="nav-icon">🏢</span>
+            Suppliers
+        </a>
+
+        <a href="/analytics">
+            <span class="nav-icon">📈</span>
+            Analytics
+        </a>
+
+        <a href="/fraud-alerts">
+            <span class="nav-icon">🚨</span>
+            Fraud Alerts
+        </a>
+
+        <a href="/reports" class="active">
+            <span class="nav-icon">📑</span>
+            Reports
+        </a>
+
+        <a href="/notifications">
+            <span class="nav-icon">🔔</span>
+            Notifications
+        </a>
+
+        <a href="/ai-assistant">
+            <span class="nav-icon">🤖</span>
+            AI Assistant
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-user">
+
+        <div class="user-name">
+            👤 {{ username }}
+        </div>
+
+        <div class="user-role">
+            {{ role }}
+        </div>
+
+        <a href="/logout" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+
+    <!-- HEADER -->
+
+    <div class="topbar">
+
+        <div class="page-title">
+
+            <h1>
+                Financial Reports
+            </h1>
+
+            <p>
+                Overview of invoices, payments and financial activity.
+            </p>
+
+        </div>
+
+
+        <button
+            class="print-button"
+            onclick="window.print()"
+        >
+            🖨 Print Report
+        </button>
+
+    </div>
+
+
+
+    <!-- ================= SUMMARY ================= -->
+
+    <section class="summary-grid">
+
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <span class="summary-label">
+                    Invoice Value
+                </span>
+
+                <div class="summary-icon">
+                    🧾
+                </div>
+
+            </div>
+
+            <div class="summary-value">
+                R {{ "%.2f"|format(total_invoice_value) }}
+            </div>
+
+            <div class="summary-note">
+                Total value of all invoices
+            </div>
+
+        </div>
+
+
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <span class="summary-label">
+                    Paid Value
+                </span>
+
+                <div class="summary-icon">
+                    💰
+                </div>
+
+            </div>
+
+            <div class="summary-value">
+                R {{ "%.2f"|format(paid_value) }}
+            </div>
+
+            <div class="summary-note">
+                Completed invoice value
+            </div>
+
+        </div>
+
+
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <span class="summary-label">
+                    Outstanding
+                </span>
+
+                <div class="summary-icon">
+                    ⏳
+                </div>
+
+            </div>
+
+            <div class="summary-value">
+                R {{ "%.2f"|format(outstanding_value) }}
+            </div>
+
+            <div class="summary-note">
+                Pending and approved invoices
+            </div>
+
+        </div>
+
+
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <span class="summary-label">
+                    Payments
+                </span>
+
+                <div class="summary-icon">
+                    💳
+                </div>
+
+            </div>
+
+            <div class="summary-value">
+                {{ payment_count }}
+            </div>
+
+            <div class="summary-note">
+                Total payment transactions
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= REPORT INFORMATION ================= -->
+
+    <section class="report-grid">
+
+
+        <!-- FINANCIAL SUMMARY -->
+
+        <div class="report-card">
+
+            <div class="report-header">
+
+                <h2>
+                    Financial Summary
+                </h2>
+
+                <p>
+                    Current financial position based on recorded transactions.
+                </p>
+
+            </div>
+
+
+            <div class="report-body">
+
+
+                <div class="financial-row">
+
+                    <span class="financial-label">
+                        Total Invoice Value
+                    </span>
+
+                    <span class="financial-value">
+                        R {{ "%.2f"|format(total_invoice_value) }}
+                    </span>
+
+                </div>
+
+
+                <div class="financial-row">
+
+                    <span class="financial-label">
+                        Paid Invoice Value
+                    </span>
+
+                    <span class="financial-value positive">
+                        R {{ "%.2f"|format(paid_value) }}
+                    </span>
+
+                </div>
+
+
+                <div class="financial-row">
+
+                    <span class="financial-label">
+                        Outstanding Invoice Value
+                    </span>
+
+                    <span class="financial-value warning">
+                        R {{ "%.2f"|format(outstanding_value) }}
+                    </span>
+
+                </div>
+
+
+                <div class="financial-row">
+
+                    <span class="financial-label">
+                        Total Payment Transactions
+                    </span>
+
+                    <span class="financial-value">
+                        {{ payment_count }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- INVOICE STATUS -->
+
+        <div class="report-card">
+
+            <div class="report-header">
+
+                <h2>
+                    Invoice Status
+                </h2>
+
+                <p>
+                    Distribution of invoices by current status.
+                </p>
+
+            </div>
+
+
+            <div class="report-body">
+
+
+                {% if status_data %}
+
+                    {% for item in status_data %}
+
+                        <div class="status-row">
+
+                            <div class="status-info">
+
+                                <span class="status-name">
+                                    {{ item.status or "Unknown" }}
+                                </span>
+
+                                <span class="status-count">
+                                    {{ item.count }}
+                                </span>
+
+                            </div>
+
+
+                            {% if total_invoices > 0 %}
+
+                                {% set percentage =
+                                    (item.count / total_invoices * 100)
+                                %}
+
+                            {% else %}
+
+                                {% set percentage = 0 %}
+
+                            {% endif %}
+
+
+                            <div class="progress">
+
+                                <div
+                                    class="progress-fill"
+                                    style="width: {{ percentage }}%;"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p style="color:#718096;font-size:13px;">
+                        No invoice status data available.
+                    </p>
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ================= SUPPLIER SPENDING ================= -->
+
+    <section class="table-card">
+
+        <div class="table-header">
+
+            <h2>
+                Supplier Spending Report
+            </h2>
+
+            <p>
+                Total invoice expenditure grouped by supplier.
+            </p>
+
+        </div>
+
+
+        {% if supplier_data %}
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Supplier
+                        </th>
+
+                        <th>
+                            Invoice Count
+                        </th>
+
+                        <th>
+                            Total Spending
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for supplier in supplier_data %}
+
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ supplier.supplier_name }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ supplier.invoice_count }}
+                        </td>
+
+                        <td>
+
+                            <span class="amount">
+
+                                R {{ "%.2f"|format(supplier.total_spend) }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <div style="
+            padding:45px;
+            text-align:center;
+            color:#718096;
+            font-size:13px;
+        ">
+
+            No supplier spending data available.
+
+        </div>
+
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- ================= MONTHLY EXPENDITURE ================= -->
+
+    <section class="table-card">
+
+        <div class="table-header">
+
+            <h2>
+                Monthly Expenditure
+            </h2>
+
+            <p>
+                Invoice expenditure grouped by month.
+            </p>
+
+        </div>
+
+
+        {% if monthly_data %}
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Month
+                        </th>
+
+                        <th>
+                            Invoice Count
+                        </th>
+
+                        <th>
+                            Total Expenditure
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for month in monthly_data %}
+
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ month.month }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ month.invoice_count }}
+                        </td>
+
+                        <td>
+
+                            <span class="amount">
+
+                                R {{ "%.2f"|format(month.total_amount) }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <div style="
+            padding:45px;
+            text-align:center;
+            color:#718096;
+            font-size:13px;
+        ">
+
+            No monthly expenditure data available.
+
+        </div>
+
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <div class="report-footer">
+
+        Smart Vendor Pay • Financial Management System
+
+    </div>
+
+
+</main>
+
+
+</body>
+</html>
+

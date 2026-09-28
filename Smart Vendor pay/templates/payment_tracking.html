@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Tracking - Smart Vendor Pay</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172b4d;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #09233d 0%, #0d3558 100%);
+            color: white;
+            padding: 24px 16px;
+            overflow-y: auto;
+        }
+
+        .brand {
+            padding: 5px 10px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 20px;
+        }
+
+        .brand h2 {
+            font-size: 21px;
+            margin-bottom: 5px;
+        }
+
+        .brand span {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #a9c4dd;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #8eabc4;
+            padding: 0 12px 10px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #d7e5f2;
+            padding: 12px;
+            border-radius: 9px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav a:hover {
+            background: rgba(255,255,255,0.09);
+            color: white;
+        }
+
+        .nav a.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-weight: 600;
+            border-left: 3px solid #ffffff;
+        }
+
+        .nav-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* ================= USER ================= */
+
+        .sidebar-user {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 18px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #9eb8cf;
+            margin-top: 3px;
+        }
+
+        .logout {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            padding: 9px;
+            border-radius: 7px;
+            background: rgba(255,255,255,0.08);
+            color: #dbe8f4;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .logout:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            padding: 30px 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            color: #09233d;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .top-action {
+            display: inline-block;
+            text-decoration: none;
+            background: #09233d;
+            color: white;
+            padding: 11px 17px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .top-action:hover {
+            background: #0d3558;
+        }
+
+        /* ================= SUMMARY CARDS ================= */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e4eaf1;
+            box-shadow: 0 3px 12px rgba(9,35,61,0.05);
+        }
+
+        .summary-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 13px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            background: #edf4fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .summary-value {
+            font-size: 25px;
+            font-weight: 700;
+            color: #09233d;
+        }
+
+        .summary-note {
+            font-size: 11px;
+            color: #8795a7;
+            margin-top: 5px;
+        }
+
+        /* ================= STATUS OVERVIEW ================= */
+
+        .status-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .status-card {
+            background: white;
+            border: 1px solid #e4eaf1;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(9,35,61,0.05);
+        }
+
+        .status-card h3 {
+            color: #09233d;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .progress-row {
+            margin-bottom: 14px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 6px;
+            color: #5f6f82;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #edf1f5;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: #0d5c8a;
+        }
+
+        .progress-fill.pending {
+            background: #d39a22;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e4eaf1;
+            box-shadow: 0 3px 12px rgba(9,35,61,0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e8edf3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            font-size: 18px;
+            color: #09233d;
+        }
+
+        .table-header span {
+            font-size: 12px;
+            color: #7b8796;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            text-align: left;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 13px 18px;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #edf1f5;
+            font-size: 13px;
+            color: #334155;
+        }
+
+        tr:hover td {
+            background: #fbfcfe;
+        }
+
+        .invoice-number {
+            font-weight: 700;
+            color: #0d3558;
+        }
+
+        .supplier {
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .amount {
+            font-weight: 700;
+            color: #09233d;
+        }
+
+        /* ================= STATUS BADGES ================= */
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-pending {
+            background: #fff5d8;
+            color: #996f00;
+        }
+
+        .badge-completed {
+            background: #e4f7ec;
+            color: #197044;
+        }
+
+        .badge-rejected {
+            background: #fde8e8;
+            color: #b42318;
+        }
+
+        .badge-other {
+            background: #edf1f5;
+            color: #596579;
+        }
+
+        /* ================= PAYMENT PROGRESS ================= */
+
+        .payment-progress {
+            min-width: 120px;
+        }
+
+        .mini-progress {
+            width: 100%;
+            height: 6px;
+            background: #edf1f5;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .mini-progress-fill {
+            height: 100%;
+            background: #0d5c8a;
+            border-radius: 10px;
+        }
+
+        .percentage {
+            font-size: 11px;
+            color: #718096;
+        }
+
+        /* ================= EMPTY STATE ================= */
+
+        .empty-state {
+            padding: 55px 20px;
+            text-align: center;
+            color: #718096;
+        }
+
+        .empty-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1100px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .status-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .sidebar-user {
+                position: relative;
+                left: auto;
+                right: auto;
+                bottom: auto;
+                margin-top: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 22px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <h2>💳 Smart Vendor Pay</h2>
+            <span>FINANCIAL MANAGEMENT</span>
+        </div>
+
+        <div class="nav-title">Main Menu</div>
+
+        <nav class="nav">
+
+            <a href="/dashboard">
+                <span class="nav-icon">🏠</span>
+                Dashboard
+            </a>
+
+            <a href="/invoices">
+                <span class="nav-icon">🧾</span>
+                Invoices
+            </a>
+
+            <a href="/invoice-verification">
+                <span class="nav-icon">🔍</span>
+                Invoice Verification
+            </a>
+
+            <a href="/payments">
+                <span class="nav-icon">💳</span>
+                Payments
+            </a>
+
+            <a href="/payment-tracking" class="active">
+                <span class="nav-icon">📊</span>
+                Payment Tracking
+            </a>
+
+            <a href="/payment-history">
+                <span class="nav-icon">🕘</span>
+                Payment History
+            </a>
+
+            <a href="/payment-approval">
+                <span class="nav-icon">📋</span>
+                Payment Approval
+            </a>
+
+            <a href="/suppliers">
+                <span class="nav-icon">🏢</span>
+                Suppliers
+            </a>
+
+            <a href="/analytics">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+
+            <a href="/fraud-alerts">
+                <span class="nav-icon">🚨</span>
+                Fraud Alerts
+            </a>
+
+            <a href="/reports">
+                <span class="nav-icon">📑</span>
+                Reports
+            </a>
+
+            <a href="/notifications">
+                <span class="nav-icon">🔔</span>
+                Notifications
+            </a>
+
+            <a href="/ai-assistant">
+                <span class="nav-icon">🤖</span>
+                AI Assistant
+            </a>
+
+        </nav>
+
+        <div class="sidebar-user">
+
+            <div class="user-name">
+                👤 {{ username }}
+            </div>
+
+            <div class="user-role">
+                {{ role }}
+            </div>
+
+            <a href="/logout" class="logout">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="page-title">
+                <h1>Payment Tracking</h1>
+                <p>Monitor payment progress, values and current payment status.</p>
+            </div>
+
+            <a href="/payments/add" class="top-action">
+                + Add Payment
+            </a>
+
+        </div>
+
+
+        <!-- ================= SUMMARY CARDS ================= -->
+
+        <section class="summary-grid">
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+                    <span class="summary-label">Total Payments</span>
+                    <div class="summary-icon">💳</div>
+                </div>
+
+                <div class="summary-value">
+                    {{ total_payments }}
+                </div>
+
+                <div class="summary-note">
+                    All payment records
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+                    <span class="summary-label">Completed</span>
+                    <div class="summary-icon">✓</div>
+                </div>
+
+                <div class="summary-value">
+                    {{ completed_payments }}
+                </div>
+
+                <div class="summary-note">
+                    Successfully completed payments
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+                    <span class="summary-label">Pending</span>
+                    <div class="summary-icon">⏳</div>
+                </div>
+
+                <div class="summary-value">
+                    {{ pending_payments }}
+                </div>
+
+                <div class="summary-note">
+                    Awaiting approval or processing
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+                    <span class="summary-label">Total Paid</span>
+                    <div class="summary-icon">💰</div>
+                </div>
+
+                <div class="summary-value">
+                    R {{ "%.2f"|format(total_paid) }}
+                </div>
+
+                <div class="summary-note">
+                    Completed payment value
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= STATUS OVERVIEW ================= -->
+
+        <section class="status-section">
+
+            <div class="status-card">
+
+                <h3>Payment Completion</h3>
+
+                {% if total_payments > 0 %}
+
+                    {% set completed_percentage =
+                        (completed_payments / total_payments * 100)
+                    %}
+
+                    {% set pending_percentage =
+                        (pending_payments / total_payments * 100)
+                    %}
+
+                {% else %}
+
+                    {% set completed_percentage = 0 %}
+                    {% set pending_percentage = 0 %}
+
+                {% endif %}
+
+
+                <div class="progress-row">
+
+                    <div class="progress-info">
+                        <span>Completed Payments</span>
+                        <strong>{{ "%.1f"|format(completed_percentage) }}%</strong>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div
+                            class="progress-fill"
+                            style="width: {{ completed_percentage }}%;">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-row">
+
+                    <div class="progress-info">
+                        <span>Pending Payments</span>
+                        <strong>{{ "%.1f"|format(pending_percentage) }}%</strong>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div
+                            class="progress-fill pending"
+                            style="width: {{ pending_percentage }}%;">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="status-card">
+
+                <h3>Payment Value Overview</h3>
+
+                {% if total_payment_value > 0 %}
+
+                    {% set paid_percentage =
+                        (total_paid / total_payment_value * 100)
+                    %}
+
+                {% else %}
+
+                    {% set paid_percentage = 0 %}
+
+                {% endif %}
+
+                {% if paid_percentage > 100 %}
+                    {% set paid_percentage = 100 %}
+                {% endif %}
+
+
+                <div class="progress-row">
+
+                    <div class="progress-info">
+                        <span>Paid Value</span>
+                        <strong>
+                            R {{ "%.2f"|format(total_paid) }}
+                        </strong>
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width: {{ paid_percentage }}%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-row">
+
+                    <div class="progress-info">
+                        <span>Total Payment Value</span>
+                        <strong>
+                            R {{ "%.2f"|format(total_payment_value) }}
+                        </strong>
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            style="width: 100%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PAYMENT TABLE ================= -->
+
+        <section class="table-card">
+
+            <div class="table-header">
+
+                <div>
+                    <h2>Payment Activity</h2>
+                    <span>Track each payment against its invoice.</span>
+                </div>
+
+                <span>
+                    {{ total_payments }} payment(s)
+                </span>
+
+            </div>
+
+
+            {% if payments %}
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Payment ID</th>
+                            <th>Invoice</th>
+                            <th>Supplier</th>
+                            <th>Payment Amount</th>
+                            <th>Invoice Amount</th>
+                            <th>Payment Date</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for payment in payments %}
+
+                        <tr>
+
+                            <td>
+                                <strong>#{{ payment.id }}</strong>
+                            </td>
+
+
+                            <td>
+                                <span class="invoice-number">
+                                    {{ payment.invoice_number }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span class="supplier">
+                                    {{ payment.supplier_name }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span class="amount">
+                                    R {{ "%.2f"|format(payment.payment_amount) }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                R {{ "%.2f"|format(payment.invoice_amount) }}
+                            </td>
+
+
+                            <td>
+                                {{ payment.payment_date }}
+                            </td>
+
+
+                            <td>
+
+                                <div class="payment-progress">
+
+                                    <div class="mini-progress">
+
+                                        <div
+                                            class="mini-progress-fill"
+                                            style="width: {{ payment.percentage }}%;">
+                                        </div>
+
+                                    </div>
+
+                                    <div class="percentage">
+                                        {{ payment.percentage }}%
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if payment.status == "Pending" %}
+
+                                    <span class="badge badge-pending">
+                                        ⏳ Pending
+                                    </span>
+
+                                {% elif payment.status == "Completed" %}
+
+                                    <span class="badge badge-completed">
+                                        ✓ Completed
+                                    </span>
+
+                                {% elif payment.status == "Rejected" %}
+
+                                    <span class="badge badge-rejected">
+                                        ✕ Rejected
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge badge-other">
+                                        {{ payment.status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">💳</div>
+
+                <h3>No Payments Found</h3>
+
+                <p>
+                    No payment records have been created yet.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+</html>

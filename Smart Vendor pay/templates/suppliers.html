@@ -1,0 +1,273 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Suppliers - Smart Vendor Pay</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        .header {
+            background: #1f2937;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-right span {
+            color: #d1d5db;
+        }
+
+        .logout {
+            color: white;
+            text-decoration: none;
+            background: #dc2626;
+            padding: 8px 14px;
+            border-radius: 6px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .top-section h2 {
+            color: #1f2937;
+        }
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .add-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f3f4f6;
+            color: #374151;
+            text-align: left;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .risk {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 700px) {
+            .top-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>Smart Vendor Pay</h1>
+
+        <div class="header-right">
+            <span>
+                {{ username }} ({{ role }})
+            </span>
+
+            <a href="/logout" class="logout">
+                Logout
+            </a>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+
+        <a href="/dashboard" class="back">
+            ← Back to Dashboard
+        </a>
+
+
+        <div class="top-section">
+
+            <h2>Supplier Management</h2>
+
+            <a href="/suppliers/add" class="add-btn">
+                + Add Supplier
+            </a>
+
+        </div>
+
+
+        <div class="table-card">
+
+            {% if suppliers %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Supplier Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Bank</th>
+                        <th>Account Number</th>
+                        <th>Risk Score</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for supplier in suppliers %}
+
+                    <tr>
+
+                        <td>{{ supplier.id }}</td>
+
+                        <td>
+                            <strong>{{ supplier.name }}</strong>
+                        </td>
+
+                        <td>
+                            {{ supplier.email }}
+                        </td>
+
+                        <td>
+                            {{ supplier.phone }}
+                        </td>
+
+                        <td>
+                            {{ supplier.bank_name }}
+                        </td>
+
+                        <td>
+                            {{ supplier.account_number }}
+                        </td>
+
+                        <td>
+                            <span class="risk">
+                                {{ supplier.risk_score }}
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+
+                <h3>No Suppliers Found</h3>
+
+                <p>
+                    You haven't added any suppliers yet.
+                </p>
+
+                <br>
+
+                <a href="/suppliers/add" class="add-btn">
+                    + Add Your First Supplier
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+```
